@@ -2,13 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const port = 3000;
-app.set('view engine', 'ejs');  // Set EJS as the view engine
+app.set('view engine', 'ejs');  
 
 
-// Middleware for JSON body parsing
 app.use(express.json());
 
-// MongoDB connection
 mongoose.connect('mongodb://localhost:27017/exp6db', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -16,7 +14,6 @@ mongoose.connect('mongodb://localhost:27017/exp6db', {
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Define MongoDB Schema & Model for users
 const userSchema = new mongoose.Schema({
   name: String,
   age: Number,
@@ -25,7 +22,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// ➕ CREATE new user
 app.post('/users', async (req, res) => {
   const user = new User(req.body);
   try {
@@ -36,7 +32,6 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// 📄 READ all users
 app.get('/users', async (req, res) => {
   try {
     const users = await User.find();
@@ -46,7 +41,6 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// ✏️ UPDATE user by ID
 app.put('/users/:id', async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -56,7 +50,6 @@ app.put('/users/:id', async (req, res) => {
   }
 });
 
-// 🗑️ DELETE user by ID
 app.delete('/users/:id', async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
@@ -66,7 +59,6 @@ app.delete('/users/:id', async (req, res) => {
   }
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
@@ -79,3 +71,4 @@ app.get('/users-list', async (req, res) => {
     res.status(400).send("Error fetching users!");
   }
 });
+
